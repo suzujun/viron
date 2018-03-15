@@ -1,0 +1,254 @@
+#################################################
+# OpenAPI Specification Version2.0.0
+# @see https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md
+#################################################
+swagger: "2.0"
+
+#################################################
+# definitions
+# - リクエストやレスポンスのレイアウトの定義
+# - paths内から $ref で参照できる
+#################################################
+definitions:
+  MessageCollection:
+    type: array
+    items:
+      $ref: '#/definitions/Message'
+  
+  Message:
+    type: object
+    properties:
+      channel_id:
+        description: チャンネルID
+        example: 123
+        type: number
+      title:
+        description: タイトル
+        example: English Dictionary
+        type: string
+      contents:
+        description: 内容
+        example: English Dictionary
+        type: string
+
+#################################################
+# paths
+# - APIの一覧
+#################################################
+paths:
+  /messages:
+    get:
+      x-swagger-router-controller: message
+      description: メッセージー一覧
+      operationId: message#list
+      parameters:
+      - description: タイトル
+        in: query
+        name: title
+        required: false
+        type: string
+      - description: 1ページあたりの件数
+        in: query
+        name: limit
+        required: false
+        type: integer
+      - description: ページの開始位置
+        in: query
+        name: offset
+        required: false
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/MessageCollection'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Error'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Error'
+      security:
+      - jwt:
+        - api:access
+      summary: メッセージー一覧
+      tags:
+      - message
+  
+    post:
+      x-swagger-router-controller: message
+      description: メッセージ作成
+      operationId: message#create
+      parameters:
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/Message'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Message'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Error'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Error'
+      security:
+      - jwt:
+        - api:access
+      summary: メッセージー作成
+      x-submit-label: メッセージーを作成する
+      tags:
+      - message
+  
+  /messages/download/csv:
+    get:
+      x-swagger-router-controller: message
+      description: メッセージー一覧をcsvファイルでダウンロード
+      operationId: message#download
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Error'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Error'
+      security:
+      - jwt:
+        - api:access
+      summary: メッセージー一覧ダウンロード
+      x-submit-label: メッセージー一覧をダウンロードする
+      tags:
+      - message
+  
+  /message/upload/csv:
+    post:
+      x-swagger-router-controller: message
+      description: メッセージーをcsvファイルでアップロード
+      operationId: message#upload
+      parameters:
+      - in: formData
+        name: image
+        required: true
+        type: file
+      - in: formData
+        name: text
+        type: string
+      consumes:
+      - multipart/form-data
+      responses:
+        "204":
+          description: No Content
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Error'
+      security:
+      - jwt:
+        - api:access
+      summary: メッセージーアップロード
+      tags:
+      - message
+  
+  /messages/{id}:
+    delete:
+      x-swagger-router-controller: message
+      description: メッセージー削除
+      operationId: message#remove
+      parameters:
+      - description: メッセージーID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Error'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Error'
+      security:
+      - jwt:
+        - api:access
+      summary: メッセージー削除
+      x-submit-label: メッセージーを削除する
+      tags:
+      - message
+  
+    put:
+      x-swagger-router-controller: message
+      description: メッセージー情報更新
+      operationId: message#update
+      parameters:
+      - description: メッセージーID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/Message'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Message'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Error'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Error'
+      security:
+      - jwt:
+        - api:access
+      summary: メッセージー更新
+      x-submit-label: メッセージーを更新する
+      tags:
+      - message
+      
+#################################################
+# tags
+#################################################
+tags:
+  - name: message

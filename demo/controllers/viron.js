@@ -162,6 +162,20 @@ const show = (req, res) => {
             ],
           },
         ],
+        [constant.GROUP_MESSAGE]: [
+          {
+            id: 'message',
+            name: 'メッセージ',
+            components: [
+              genTableComponent('メッセージ', 'get', '/message', 'id', [
+                {key: 'title', type: 'string'}
+              ], ['id', 'title'], [
+                '/message/upload/csv',
+                '/message/download/csv',
+              ]),
+            ],
+          },
+        ],
         [constant.GROUP_EXAMPLE]: [
           {
             id: 'validator',

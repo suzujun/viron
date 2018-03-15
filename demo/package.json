@@ -36,7 +36,7 @@
     "dressup": "docker-compose -f docker-compose.all.yml up --build",
     "dressup-db": "docker-compose -f docker-compose.db.yml up --build",
     "connect-main": "mysql -u user -ppassword -h 127.0.0.1 -P 3306 -Dviron_local",
-    "inspect": "nodemon --inspect=0.0.0.0:53000 -e node,js,yaml --delay 80ms --ignore node_modules ./app.js"
+    "inspect": "nodemon --inspect=0.0.0.0:53000 -e node,js,yaml --delay 280ms --ignore node_modules ./app.js"
   },
   "engines": {
     "node": ">=7"

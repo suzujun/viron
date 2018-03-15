@@ -9,6 +9,7 @@ module.exports = {
   GROUP_BLOG: 'ブログ', // ブログ
   GROUP_ADMIN: '管理', // 管理権限
   GROUP_EXAMPLE: 'サンプル', // サンプル
+  GROUP_MESSAGE: 'メッセージ',
 
   USER_MALE: 'male',
   USER_FEMALE: 'female',

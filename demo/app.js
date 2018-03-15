@@ -38,6 +38,18 @@ context.init()
       },
     };
 
+    // 個別ファイルを読み込んで結合していく
+    fs.readdirSync(`${__dirname}/swagger/valencia`).forEach(filename => {
+      const filepath = `${__dirname}/swagger/valencia/${filename}`;
+      console.log('Read yaml file of %s', filepath);
+      const data = yaml.safeLoad(fs.readFileSync(filepath, 'utf8'));
+      swagger.definitions = Object.assign(swagger.definitions, data.definitions);
+      swagger.paths = Object.assign(swagger.paths, data.paths);
+      if (!!data.tags && data.tags.length > 0) {
+        Array.prototype.push.apply(swagger.tags, data.tags);
+      }
+    });
+
     return helperSwagger.autoGenerate(swagger)
       .then(() => {
         return new Promise((resolve, reject) => {
